@@ -3,6 +3,7 @@ const dotenv = require("dotenv").config();
 const colors = require("colors");
 const PORT = process.env.PORT || 8000;
 const connectDB = require("./config/db");
+const { errorHandler } = require("./middlewares/errorMiddleware");
 
 connectDB();
 
@@ -15,5 +16,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/users", require("./routes/userRoutes"));
+app.use("/api/posts", require("./routes/postRoutes"));
+app.use(errorHandler);
 
 app.listen(PORT, () => console.log(`Server Started on port ${PORT}`));
