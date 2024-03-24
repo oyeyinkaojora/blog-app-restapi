@@ -25,7 +25,7 @@ const createPost = asyncHandler(async (req, res) => {
   return res.status(201).json(post);
 });
 
-const getPosts = asyncHandler(async (req, res) => {
+const getMyPosts = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user.id);
 
   if (!user) {
@@ -37,24 +37,17 @@ const getPosts = asyncHandler(async (req, res) => {
   res.status(200).json(posts);
 });
 
+const getPosts = asyncHandler(async (req, res) => {
+  const posts = await Post.find();
+  res.status(200).json(posts);
+});
+
 const getPost = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user.id);
-
-  if (!user) {
-    res.status(401);
-    throw new Error("User not found");
-  }
-
   const post = await Post.findById(req.params.id);
 
   if (!post) {
     res.status(404);
     throw new Error("Post does not exists!");
-  }
-
-  if (post.author.toString() !== req.user.id) {
-    res.status(401);
-    throw new Error("Not authorised");
   }
   return res.status(200).json(post);
 });
@@ -110,4 +103,4 @@ const deletePost = asyncHandler(async (req, res) => {
   return res.status(200).json({ message: "Post deleted successfully" });
 });
 
-module.exports = { createPost, getPosts, getPost, deletePost, updatePost };
+module.exports = { createPost, getPosts, getPost, deletePost, updatePost,getMyPosts };

@@ -6,13 +6,15 @@ const {
   getPost,
   updatePost,
   deletePost,
+  getMyPosts,
 } = require("../controllers/postController");
 const { protect } = require("../middlewares/authMiddleware");
 
-router.route("/").get(protect, getPosts).post(protect, createPost);
+router.route("/").get(getPosts).post(protect, createPost);
+router.route("/my-posts").get(protect, getMyPosts);
 router
   .route("/:id")
-  .get(protect, getPost)
+  .get(getPost)
   .delete(protect, deletePost)
   .put(protect, updatePost);
 

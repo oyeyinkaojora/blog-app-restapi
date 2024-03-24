@@ -15,13 +15,17 @@ const postSchema = new mongoose.Schema(
       ref: "User",
       required: [true, "Please add an author for the blog post"],
     },
+    comment: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Comment",
+    },
   },
   {
     timestamps: true,
   }
 );
 
-// Blog Post Model
+
 const Post = mongoose.model("Post", postSchema);
 
 module.exports = Post;
