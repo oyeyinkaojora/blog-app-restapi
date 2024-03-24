@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
 const Post = require("../models/postModel");
+const Comment = require("../models/commentModel");
 
 const createPost = asyncHandler(async (req, res) => {
   const { title, content } = req.body;
@@ -41,6 +42,41 @@ const getPosts = asyncHandler(async (req, res) => {
   const posts = await Post.find();
   res.status(200).json(posts);
 });
+
+const createComment = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+
+    if (!post) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Post does not exist!" });
+    }
+
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: "You must be logged in to create a comment.",
+      });
+    }
+
+    const comment = await Comment.create({
+      content: req.body.content,
+      post: post._id,
+      author: req.user._id,
+    });
+
+    post.comments.push(comment._id);
+    await post.save();
+
+    return res.status(200).json({ success: true, post, comment });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
+
+
 
 const getPost = asyncHandler(async (req, res) => {
   const post = await Post.findById(req.params.id);
@@ -103,4 +139,12 @@ const deletePost = asyncHandler(async (req, res) => {
   return res.status(200).json({ message: "Post deleted successfully" });
 });
 
-module.exports = { createPost, getPosts, getPost, deletePost, updatePost,getMyPosts };
+module.exports = {
+  createPost,
+  getPosts,
+  getPost,
+  deletePost,
+  updatePost,
+  getMyPosts,
+  createComment,
+};

@@ -7,6 +7,7 @@ const {
   updatePost,
   deletePost,
   getMyPosts,
+  createComment,
 } = require("../controllers/postController");
 const { protect } = require("../middlewares/authMiddleware");
 
@@ -15,6 +16,7 @@ router.route("/my-posts").get(protect, getMyPosts);
 router
   .route("/:id")
   .get(getPost)
+  .post(protect, createComment)
   .delete(protect, deletePost)
   .put(protect, updatePost);
 

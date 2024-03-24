@@ -15,16 +15,12 @@ const postSchema = new mongoose.Schema(
       ref: "User",
       required: [true, "Please add an author for the blog post"],
     },
-    comment: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Comment",
-    },
+    comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
   },
   {
     timestamps: true,
   }
 );
-
 
 const Post = mongoose.model("Post", postSchema);
 
