@@ -28,7 +28,7 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 
   if (user) {
-    res.status(201).json({
+    return res.status(201).json({
       _id: user._id,
       fullName: user.fullName,
       email: user.email,
@@ -39,8 +39,6 @@ const registerUser = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Invalid User Data");
   }
-
-  res.send("Register Route");
 });
 
 const loginUser = asyncHandler(async (req, res) => {
@@ -49,7 +47,7 @@ const loginUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email });
 
   if (user && (await bcrypt.compare(password, user.password))) {
-    res.status(201).json({
+    return res.status(201).json({
       _id: user._id,
       fullName: user.fullName,
       email: user.email,
@@ -60,7 +58,6 @@ const loginUser = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Invalid User Data");
   }
-  res.send("Login route");
 });
 
 const generateToken = (id) => {

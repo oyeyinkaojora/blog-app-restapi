@@ -17,17 +17,15 @@ const protect = asyncHandler(async (req, res, next) => {
 
       //Get User from token
       req.user = await User.findById(decoded.id).select("-password");
-      next();
+      return next();
     } catch (error) {
       console.log(error);
-      res.status(401);
-      throw new Error("Not authorized");
+      return res.status(401).json({ message: "Not authorized" });
     }
   }
 
   if (!token) {
-    res.status(401);
-    throw new Error("Not authorized");
+    return res.status(401).json({ message: "Not authorized" });
   }
 });
 

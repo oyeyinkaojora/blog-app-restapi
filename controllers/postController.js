@@ -22,7 +22,7 @@ const createPost = asyncHandler(async (req, res) => {
     author: req.user.id,
   });
 
-  res.status(201).json(post);
+  return res.status(201).json(post);
 });
 
 const getPosts = asyncHandler(async (req, res) => {
@@ -56,7 +56,7 @@ const getPost = asyncHandler(async (req, res) => {
     res.status(401);
     throw new Error("Not authorised");
   }
-  res.status(200).json(post);
+  return res.status(200).json(post);
 });
 
 const updatePost = asyncHandler(async (req, res) => {
@@ -79,9 +79,11 @@ const updatePost = asyncHandler(async (req, res) => {
     throw new Error("You're not authorised to update this post");
   }
 
-  const updatePost = await Post.findByIdAndUpdate(req.params.id, req.body);
+  const updatedPost = await Post.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
 
-  res.status(200).json(updatePost);
+  return res.status(200).json(updatedPost);
 });
 
 const deletePost = asyncHandler(async (req, res) => {
@@ -103,10 +105,9 @@ const deletePost = asyncHandler(async (req, res) => {
     res.status(401);
     throw new Error("You're not authorised to delete this post");
   }
+  await Post.findByIdAndDelete(req.params.id);
 
-  post.remove();
-
-  res.status(200).json(post);
+  return res.status(200).json({ message: "Post deleted successfully" });
 });
 
 module.exports = { createPost, getPosts, getPost, deletePost, updatePost };
